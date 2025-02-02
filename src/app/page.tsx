@@ -1,14 +1,9 @@
-import Image from "next/image";
-import Chatbot from "./_components/chatbot";
-import ChatbotCustomizer from "./_components/customize";
+import Main from "./_components/main";
 
 export default function Home() {
   return (
     <div className="min-h-screen">
-      <ChatbotCustomizer/>
+      <Main />
     </div>
-    // <div>
-    //   hello
-    // </div>
   );
 }
