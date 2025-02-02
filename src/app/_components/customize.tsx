@@ -33,7 +33,7 @@ const ChatbotCustomizer = () => {
       const formData = new FormData();
       formData.append('file', file);
       try {
-        const response = await axios.post(`https://415b-2401-4900-1c66-75af-eabe-a6d8-6b41-2101.ngrok-free.app/process?do_ocr=true&do_table_structure=true&do_cell_matching=true&collection_name=${chatbotName}`, formData, {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_UPLOAD}/process?do_ocr=true&do_table_structure=true&do_cell_matching=true&collection_name=${chatbotName}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -59,7 +59,7 @@ const ChatbotCustomizer = () => {
 
       try {
         console.log(input)
-        const response = await axios.post(`https://af71-2401-4900-1c66-75af-4696-215-cc24-cd42.ngrok-free.app/query?query=${encodeURIComponent(input)}&collection_name=${chatbotName}`);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC__API_QNA}/query?query=${encodeURIComponent(input)}&collection_name=${chatbotName}`);
         console.log(response)
         if (response.status === 200) {
           setMessages((prevMessages) => [

@@ -10,6 +10,7 @@ interface ChatbotPanelProps {
   handleSend: () => void;
 }
 
+
 const ChatbotPanel: React.FC<ChatbotPanelProps> = ({ chatbotColor, chatbotName, messages, input, setInput, handleSend }) => {
   const [view, setView] = useState<'canvas' | 'code'>('canvas'); // 'canvas' or 'code'
 
@@ -183,7 +184,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({ chatbotColor, chatbotName, 
         });
         let message = messageInput.value;
         messageInput.value = "";
-        fetch(\`https://af71-2401-4900-1c66-75af-4696-215-cc24-cd42.ngrok-free.app/query?query=\${encodeURIComponent(message)}&collection_name=${chatbotName}\`, {
+        fetch(\`${process.env.NEXT_PUBLIC__API_QNA}/query?query=\${encodeURIComponent(message)}&collection_name=${chatbotName}\`, {
           method: "POST"})
           .then((response) => response.json())
           .then((response) => {
