@@ -1,7 +1,7 @@
 // components/AuthAndCustomizer.tsx
 'use client';
 import { useState } from 'react';
-import ChatbotCustomizer from './Customize';
+import ChatbotCustomizer from '../_components/Customize';
 
 interface AuthProps {
   setChatbotName: (name: string) => void;
