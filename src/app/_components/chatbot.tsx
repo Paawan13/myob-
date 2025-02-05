@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Panel } from 'react-resizable-panels';
+import { get } from "http";
+import React, { useEffect, useState } from "react";
+import { Panel } from "react-resizable-panels";
 
 interface ChatbotPanelProps {
   chatbotColor: string;
@@ -10,8 +11,16 @@ interface ChatbotPanelProps {
   handleSend: () => void;
 }
 
-const ChatbotPanel: React.FC<ChatbotPanelProps> = ({ chatbotColor, chatbotName, messages, input, setInput, handleSend }) => {
-  const [view, setView] = useState<'canvas' | 'code'>('canvas'); // 'canvas' or 'code'
+const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
+  chatbotColor,
+  chatbotName,
+  messages,
+  input,
+  setInput,
+  handleSend,
+}) => {
+  const [view, setView] = useState<"canvas" | "code">("canvas"); // 'canvas' or 'code'
+  const [islogin, setLogin] = useState<any>(window  ? window.localStorage.getItem("islogin") : null);
 
   const codeSnippet = `<div id="chat-container">
   <button id="chat-button">Chat with us!</button>
@@ -204,37 +213,55 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({ chatbotColor, chatbotName, 
 </script>`;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(codeSnippet)
-      .then(() => alert('Code copied to clipboard!'))
-      .catch((err) => alert('Failed to copy code: ' + err));
+    navigator.clipboard
+      .writeText(codeSnippet)
+      .then(() => alert("Code copied to clipboard!"))
+      .catch((err) => alert("Failed to copy code: " + err));
   };
-
+  console.log(islogin)
+  useEffect(() => {
+    if (Window) {
+      const islogin = localStorage.getItem("islogin");
+      console.log("islogin", islogin)
+      setLogin(islogin);
+    }
+  }, []);
   return (
     <Panel defaultSize={50} minSize={20}>
-      <div className="h-full flex flex-col bg-white p-6">
+      <div className={`h-4/6 flex flex-col bg-white p-6`}>
         {/* Toggle Buttons */}
-        <div className="flex justify-center space-x-4 mb-4">
-          <button
-            onClick={() => setView('canvas')}
-            className={`px-4 py-2 rounded-lg ${view === 'canvas' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
-          >
-            Canvas
-          </button>
-          <button
-            onClick={() => setView('code')}
-            className={`px-4 py-2 rounded-lg ${view === 'code' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
-          >
-            Code
-          </button>
-        </div>
+        {islogin && (
+          <div className="flex justify-center space-x-4 mb-4">
+            <button
+              onClick={() => setView("canvas")}
+              className={`px-4 py-2 rounded-lg ${view === "canvas"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
+                }`}
+            >
+              Canvas
+            </button>
+            <button
+              onClick={() => setView("code")}
+              className={`px-4 py-2 rounded-lg ${view === "code"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
+                }`}
+            >
+              Code
+            </button>
+          </div>
+        )}
 
         {/* Conditional Rendering */}
-        {view === 'canvas' ? (
-          
-          <div className='h-[100vh] w-5/6 mx-auto'>
+        {view === "canvas" ? (
+          <div className="w-5/6 mx-auto">
             <div className="flex-1 overflow-y-auto h-[80vh] mb-4">
               {/* Chatbot Header */}
-              <div className="p-4 rounded-t-lg" style={{ backgroundColor: chatbotColor }}>
+              <div
+                className="p-4 rounded-t-lg"
+                style={{ backgroundColor: chatbotColor }}
+              >
                 <h2 className="text-white text-xl font-bold">{chatbotName}</h2>
               </div>
 
@@ -243,10 +270,14 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({ chatbotColor, chatbotName, 
                 {messages.map((msg, index) => (
                   <div
                     key={index}
-                    className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
+                      }`}
                   >
                     <div
-                      className={`rounded-lg p-3 max-w-xs ${msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                      className={`rounded-lg p-3 max-w-xs ${msg.sender === "user"
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                        }`}
                     >
                       {msg.text}
                     </div>
@@ -261,7 +292,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({ chatbotColor, chatbotName, 
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                onKeyPress={(e) => e.key === "Enter" && handleSend()}
                 className="flex-1 p-2 border rounded-l-lg focus:outline-none"
                 placeholder="Type a message..."
               />

@@ -1,6 +1,6 @@
 'use client';
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 
 interface CustomizeProps {
@@ -21,6 +21,7 @@ const Customize: React.FC<CustomizeProps> = ({ setChatbotColor, setChatbotName, 
     '#8b5cf6', // Purple
     '#ec4899', // Pink
   ];
+
 
   // Handle document upload
   const handleDocumentUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {

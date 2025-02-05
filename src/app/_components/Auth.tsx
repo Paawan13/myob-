@@ -1,6 +1,6 @@
 // components/AuthAndCustomizer.tsx
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChatbotCustomizer from './customize';
 
 interface AuthProps {
@@ -12,7 +12,7 @@ interface AuthProps {
 
 const Auth: React.FC<AuthProps> = ({ setChatbotColor, setChatbotName, chatbotColor, chatbotName }) => {
   const [isLogin, setIsLogin] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<any>(window ? window.localStorage.getItem("islogin") : null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -21,10 +21,20 @@ const Auth: React.FC<AuthProps> = ({ setChatbotColor, setChatbotName, chatbotCol
     event.preventDefault();
     // Here you would typically handle the API call to your backend for authentication
     console.log(isLogin ? 'Logging in...' : 'Signing up...', { email, password, name });
+    if (window) {
+      localStorage.setItem("islogin", isLogin.toString());
+    }
     // Simulate a successful authentication
     setIsAuthenticated(true);
   };
-
+  // useEffect(()=>{
+  //   if (window) {
+  //     if (islogin) {
+  //       const islogin = localStorage.setItem("islogin");
+  //       setIsLogin(islogin === 'true');
+  //     }
+  //   }
+  // })
   if (isAuthenticated) {
     return <ChatbotCustomizer
       setChatbotName={setChatbotName}
