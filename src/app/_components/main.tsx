@@ -5,15 +5,15 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import ChatbotPanel from './chatbot';
 import axios from 'axios';
 import Auth from './Auth';
+import { useSelector } from 'react-redux';
 
 const ChatbotCustomizer = () => {
   // State for chatbot customization
-  const [chatbotName, setChatbotName] = useState('Chatbot');
-  const [chatbotColor, setChatbotColor] = useState('#3b82f6'); // Default blue
 
   // State for chat messages
   const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
   const [input, setInput] = useState('');
+  const { Name: chatbotName, Color: chatbotColor } = useSelector((state: any) => state.chatBot)
 
   // Handle sending messages
   const handleSend = async () => {
@@ -24,7 +24,7 @@ const ChatbotCustomizer = () => {
 
       try {
         console.log(input)
-        const response = await axios.post(`https://af71-2401-4900-1c66-75af-4696-215-cc24-cd42.ngrok-free.app/query?query=${encodeURIComponent(input)}&collection_name=${chatbotName}`);
+        const response = await axios.post(`https://lies-discussed-acre-acrylic.trycloudflare.com/query?query=${encodeURIComponent(input)}&collection_name=${chatbotName}`);
         console.log(response)
         if (response.status === 200) {
           setMessages((prevMessages) => [
@@ -44,12 +44,7 @@ const ChatbotCustomizer = () => {
     <PanelGroup direction="horizontal" className="h-screen">
       {/* Left Half: Customization Panel */}
       <Panel defaultSize={50} minSize={30}>
-        <Auth
-          chatbotName={chatbotName}
-          setChatbotName={setChatbotName}
-          chatbotColor={chatbotColor}
-          setChatbotColor={setChatbotColor}
-        />
+        <Auth />
       </Panel>
 
       {/* Draggable Resize Handle */}
@@ -58,8 +53,6 @@ const ChatbotCustomizer = () => {
       {/* Right Half: Chatbot */}
       <Panel defaultSize={50} minSize={30}>
         <ChatbotPanel
-          chatbotName={chatbotName}
-          chatbotColor={chatbotColor}
           messages={messages}
           input={input}
           setInput={setInput}

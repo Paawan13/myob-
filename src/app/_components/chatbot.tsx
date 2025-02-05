@@ -1,10 +1,9 @@
 import { get } from "http";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Panel } from "react-resizable-panels";
 
 interface ChatbotPanelProps {
-  chatbotColor: string;
-  chatbotName: string;
   messages: { sender: string; text: string }[];
   input: string;
   setInput: (input: string) => void;
@@ -12,15 +11,16 @@ interface ChatbotPanelProps {
 }
 
 const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
-  chatbotColor,
-  chatbotName,
   messages,
   input,
   setInput,
   handleSend,
 }) => {
   const [view, setView] = useState<"canvas" | "code">("canvas"); // 'canvas' or 'code'
-  const [islogin, setLogin] = useState<any>(window  ? window.localStorage.getItem("islogin") : null);
+  const [islogin, setLogin] = useState<any>(window ? window.localStorage.getItem("islogin") : null);
+
+  const { Name: chatbotName, Color: chatbotColor } = useSelector((state: any) => state.chatBot)
+  console.table([chatbotName, chatbotColor]);
 
   const codeSnippet = `<div id="chat-container">
   <button id="chat-button">Chat with us!</button>
@@ -192,7 +192,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
         });
         let message = messageInput.value;
         messageInput.value = "";
-        fetch(\`https://af71-2401-4900-1c66-75af-4696-215-cc24-cd42.ngrok-free.app/query?query=\${encodeURIComponent(message)}&collection_name=${chatbotName}\`, {
+        fetch(\`https://lies-discussed-acre-acrylic.trycloudflare.com/query?query=\${encodeURIComponent(message)}&collection_name=${chatbotName}\`, {
           method: "POST"})
           .then((response) => response.json())
           .then((response) => {
@@ -260,9 +260,9 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
               {/* Chatbot Header */}
               <div
                 className="p-4 rounded-t-lg"
-                style={{ backgroundColor: chatbotColor }}
+                style={{ backgroundColor: chatbotColor ?? "red" }}
               >
-                <h2 className="text-white text-xl font-bold">{chatbotName}</h2>
+                <h2 className="text-white text-xl font-bold">{chatbotName ?? "Enter Name..."}</h2>
               </div>
 
               {/* Chat Messages */}
@@ -298,7 +298,8 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
               />
               <button
                 onClick={handleSend}
-                className="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600"
+                className="p-2 rounded-r-lg"
+                style={{ backgroundColor: chatbotColor ?? "red", color: "white" }}
               >
                 Send
               </button>

@@ -1,16 +1,10 @@
 // components/AuthAndCustomizer.tsx
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ChatbotCustomizer from './customize';
 
-interface AuthProps {
-  setChatbotName: (name: string) => void;
-  chatbotName: string;
-  chatbotColor: string;
-  setChatbotColor: (color: string) => void;
-}
 
-const Auth: React.FC<AuthProps> = ({ setChatbotColor, setChatbotName, chatbotColor, chatbotName }) => {
+const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState<any>(window ? window.localStorage.getItem("islogin") : null);
   const [email, setEmail] = useState('');
@@ -27,21 +21,8 @@ const Auth: React.FC<AuthProps> = ({ setChatbotColor, setChatbotName, chatbotCol
     // Simulate a successful authentication
     setIsAuthenticated(true);
   };
-  // useEffect(()=>{
-  //   if (window) {
-  //     if (islogin) {
-  //       const islogin = localStorage.setItem("islogin");
-  //       setIsLogin(islogin === 'true');
-  //     }
-  //   }
-  // })
   if (isAuthenticated) {
-    return <ChatbotCustomizer
-      setChatbotName={setChatbotName}
-      chatbotName={name}
-      chatbotColor={chatbotColor}
-      setChatbotColor={setChatbotColor}
-    />;
+    return <ChatbotCustomizer />;
   }
 
   return (

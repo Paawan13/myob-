@@ -1,17 +1,15 @@
 'use client';
+import { setColor, setName } from '@/store/slices/state';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
 
-interface CustomizeProps {
-  setChatbotName: (name: string) => void;
-  chatbotName: string;
-  chatbotColor: string;
-  setChatbotColor: (color: string) => void;
-}
 
-const Customize: React.FC<CustomizeProps> = ({ setChatbotColor, setChatbotName, chatbotColor, chatbotName }) => {
+const Customize = () => {
 
+  const Dispatch = useDispatch()
+  const { Name: chatbotName, Color: chatbotColor } = useSelector((state: any) => state.chatBot)
   // Predefined color options
   const colorOptions = [
     '#3b82f6', // Blue
@@ -32,7 +30,7 @@ const Customize: React.FC<CustomizeProps> = ({ setChatbotColor, setChatbotName, 
       const formData = new FormData();
       formData.append('file', file);
       try {
-        const response = await axios.post(`https://415b-2401-4900-1c66-75af-eabe-a6d8-6b41-2101.ngrok-free.app/process?do_ocr=true&do_table_structure=true&do_cell_matching=true&collection_name=${chatbotName}`, formData, {
+        const response = await axios.post(`https://e7fa-2401-4900-1c68-ab18-b3a8-8800-bf8f-f867.ngrok-free.app/process?do_ocr=true&do_table_structure=true&do_cell_matching=true&collection_name=${chatbotName}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -60,7 +58,7 @@ const Customize: React.FC<CustomizeProps> = ({ setChatbotColor, setChatbotName, 
       {/* Chatbot Name */}
       <div className="mb-10">
         <label className="block text-sm font-medium mb-2">Chatbot Name</label>
-        <input type="text" value={chatbotName} onChange={(e) => setChatbotName(e.target.value)}
+        <input type="text" onChange={(e) => { Dispatch(setName(e.target.value)); }}
           className="w-full p-2 border rounded-lg"
           placeholder="Enter chatbot name"
         />
@@ -72,7 +70,7 @@ const Customize: React.FC<CustomizeProps> = ({ setChatbotColor, setChatbotName, 
         <div className="flex gap-2">
           {colorOptions.map((color) => (
             <button key={color} style={{ backgroundColor: color }} className={`w-8 h-8 rounded-full border-2
-        ${chatbotColor === color ? 'border-black' : 'border-transparent'}`} onClick={() => setChatbotColor(color)}
+        ${chatbotColor === color ? 'border-black' : 'border-transparent'}`} onClick={() => Dispatch(setColor(color))}
             />
           ))}
         </div>
@@ -89,6 +87,9 @@ const Customize: React.FC<CustomizeProps> = ({ setChatbotColor, setChatbotName, 
           Convert to PDF
         </a>
       </div>
+      <button className='bg-blue-500 text-white p-2 rounded-lg mt-6'>
+        Submit
+      </button>
     </div>
   )
 }
