@@ -230,6 +230,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({ chatbotColor, chatbotName, 
 
         {/* Conditional Rendering */}
         {view === 'canvas' ? (
+          
           <div className='h-[100vh] w-5/6 mx-auto'>
             <div className="flex-1 overflow-y-auto h-[80vh] mb-4">
               {/* Chatbot Header */}
