@@ -21,33 +21,38 @@ const Customize = () => {
   ];
 
 
+  let formData = new FormData();
   // Handle document upload
   const handleDocumentUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      console.log('Uploaded file:', file.name);
 
-      const formData = new FormData();
       formData.append('file', file);
-      try {
-        const response = await axios.post(`https://e7fa-2401-4900-1c68-ab18-b3a8-8800-bf8f-f867.ngrok-free.app/process?do_ocr=true&do_table_structure=true&do_cell_matching=true&collection_name=${chatbotName}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        console.log(response)
-        if (response.status === 200) {
-          console.log('File uploaded successfully:', response);
-        } else {
-          console.error('Error uploading file:', response);
-        }
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
+      // try {
+      //   const response = await axios.post(`https://e7fa-2401-4900-1c68-ab18-b3a8-8800-bf8f-f867.ngrok-free.app/process?do_ocr=true&do_table_structure=true&do_cell_matching=true&collection_name=${chatbotName}`, formData, {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      //   });
+      //   console.log(response)
+      //   if (response.status === 200) {
+      //     console.log('File uploaded successfully:', response);
+      //   } else {
+      //     console.error('Error uploading file:', response);
+      //   }
+      // } catch (error) {
+      //   console.error('Error uploading file:', error);
+      // }
     }
   };
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log('Chatbot Name:', chatbotName);
+    console.log('Chatbot Color:', chatbotColor);
+    console.log('Document:', formData);
+  }
   return (
-    <div className="h-full p-6 bg-gray-100 overflow-y-auto">
+    <form onSubmit={handleSubmit} className="h-full p-6 bg-gray-100 overflow-y-auto">
       {/* Chatbot in 5 Minutes */}
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">
         Chatbot in 5 Minutes
@@ -58,7 +63,7 @@ const Customize = () => {
       {/* Chatbot Name */}
       <div className="mb-10">
         <label className="block text-sm font-medium mb-2">Chatbot Name</label>
-        <input type="text" onChange={(e) => { Dispatch(setName(e.target.value)); }}
+        <input type="text" required onChange={(e) => { Dispatch(setName(e.target.value)); }}
           className="w-full p-2 border rounded-lg"
           placeholder="Enter chatbot name"
         />
@@ -79,7 +84,7 @@ const Customize = () => {
       {/* Document Upload */}
       <div>
         <label className="block text-sm font-medium mb-2">Upload Document</label>
-        <input type="file" accept=".pdf" onChange={handleDocumentUpload} className="w-full p-2 border rounded-lg" />
+        <input required type="file" accept=".pdf" onChange={handleDocumentUpload} className="w-full p-2 border rounded-lg" />
       </div>
       <div className="mt-4">
         <a href="https://www.ilovepdf.com/powerpoint_to_pdf" target="_blank" rel="noopener noreferrer"
@@ -90,7 +95,7 @@ const Customize = () => {
       <button className='bg-blue-500 text-white p-2 rounded-lg mt-6'>
         Submit
       </button>
-    </div>
+    </form>
   )
 }
 

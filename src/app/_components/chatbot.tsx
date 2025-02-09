@@ -20,7 +20,6 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
   const [islogin, setLogin] = useState<any>(window ? window.localStorage.getItem("islogin") : null);
 
   const { Name: chatbotName, Color: chatbotColor } = useSelector((state: any) => state.chatBot)
-  console.table([chatbotName, chatbotColor]);
 
   const codeSnippet = `<div id="chat-container">
   <button id="chat-button">Chat with us!</button>
@@ -218,11 +217,9 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
       .then(() => alert("Code copied to clipboard!"))
       .catch((err) => alert("Failed to copy code: " + err));
   };
-  console.log(islogin)
   useEffect(() => {
     if (Window) {
       const islogin = localStorage.getItem("islogin");
-      console.log("islogin", islogin)
       setLogin(islogin);
     }
   }, []);

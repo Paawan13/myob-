@@ -14,7 +14,7 @@ const Auth = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     // Here you would typically handle the API call to your backend for authentication
-    console.log(isLogin ? 'Logging in...' : 'Signing up...', { email, password, name });
+    // console.log(isLogin ? 'Logging in...' : 'Signing up...', { email, password, name });
     if (window) {
       localStorage.setItem("islogin", isLogin.toString());
     }
