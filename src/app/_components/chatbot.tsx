@@ -217,12 +217,14 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
       .then(() => alert("Code copied to clipboard!"))
       .catch((err) => alert("Failed to copy code: " + err));
   };
+
   useEffect(() => {
     if (Window) {
       const islogin = localStorage.getItem("islogin");
       setLogin(islogin);
     }
   }, []);
+  
   return (
     <Panel defaultSize={50} minSize={20}>
       <div className={`h-4/6 flex flex-col bg-white p-6`}>

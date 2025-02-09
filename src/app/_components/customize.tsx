@@ -86,13 +86,13 @@ const Customize = () => {
         <label className="block text-sm font-medium mb-2">Upload Document</label>
         <input required type="file" accept=".pdf" onChange={handleDocumentUpload} className="w-full p-2 border rounded-lg" />
       </div>
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <a href="https://www.ilovepdf.com/powerpoint_to_pdf" target="_blank" rel="noopener noreferrer"
           className="text-sm border bg-slate-300 p-2 rounded-sm text-blue-500">
           Convert to PDF
         </a>
-      </div>
-      <button className='bg-blue-500 text-white p-2 rounded-lg mt-6'>
+      </div> */}
+      <button className='text-2xl bg-blue-500 text-white p-2 rounded-lg mt-6'>
         Submit
       </button>
     </form>
