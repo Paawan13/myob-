@@ -191,7 +191,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
         });
         let message = messageInput.value;
         messageInput.value = "";
-        fetch(\`https://lies-discussed-acre-acrylic.trycloudflare.com/query?query=\${encodeURIComponent(message)}&collection_name=${chatbotName}\`, {
+        fetch(\`${process.env.NEXT_PUBLIC__API_QNA}/query?query=\${encodeURIComponent(message)}&collection_name=${chatbotName}\`, {
           method: "POST"})
           .then((response) => response.json())
           .then((response) => {
@@ -224,7 +224,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
       setLogin(islogin);
     }
   }, []);
-  
+
   return (
     <Panel defaultSize={50} minSize={20}>
       <div className={`h-4/6 flex flex-col bg-white p-6`}>

@@ -24,7 +24,7 @@ const ChatbotCustomizer = () => {
 
       try {
         console.log(input)
-        const response = await axios.post(`https://lies-discussed-acre-acrylic.trycloudflare.com/query?query=${encodeURIComponent(input)}&collection_name=${chatbotName}`);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC__API_QNA}/query?query=${encodeURIComponent(input)}&collection_name=${chatbotName}`);
         console.log(response)
         if (response.status === 200) {
           setMessages((prevMessages) => [
