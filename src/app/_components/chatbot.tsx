@@ -226,7 +226,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
   }, []);
 
   return (
-    <Panel defaultSize={50} minSize={20}>
+    // <Panel defaultSize={50} minSize={20}>
       <div className={`h-4/6 flex flex-col bg-white p-6`}>
         {/* Toggle Buttons */}
         {islogin && (
@@ -325,7 +325,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
           </div>
         )}
       </div>
-    </Panel>
+    // </Panel>
   );
 };
 

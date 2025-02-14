@@ -7,7 +7,7 @@ const Main = dynamic(() => import("./_components/main"),{ssr: false});
 export default function Home() {
   return (
     <Provider store={store}>
-    <div className="min-h-screen">
+    <div className="overflow-x-scroll h-[100vh]">
       <Main />
     </div>
     </Provider>
