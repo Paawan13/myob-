@@ -227,7 +227,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
 
   return (
     // <Panel defaultSize={50} minSize={20}>
-      <div className={`h-4/6 flex flex-col bg-white p-6`}>
+      <div className={`h-[100vh] flex flex-col bg-white p-6`}>
         {/* Toggle Buttons */}
         {islogin && (
           <div className="flex justify-center space-x-4 mb-4">
@@ -319,7 +319,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
                 Copy Code
               </button>
             </div>
-            <pre className="overflow-auto text- h-[80vh] bg-gray-100 p-4 rounded-lg">
+            <pre className="overflow-auto text- h-[100vh] bg-gray-100 p-4 rounded-lg">
               <code>{codeSnippet}</code>
             </pre>
           </div>
