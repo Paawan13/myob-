@@ -45,9 +45,12 @@ export default function ChatbotForm() {
     }
   };
   // handle URL upload
-  const handleURLUpload = async (url: any) => {
-    if (url) {
+  const handleURLUpload = async (e: any) => {
+    if (e.target.value) {
+      let url = encodeURIComponent(e.target.value);
+      // console.log('URL:', e.target.value);
       // 'https://crimes-exception-casual-extraordinary.trycloudflare.com/process_website?start_url=https%3A%2F%2Fay2i.com%2F&do_ocr=false&do_table_structure=false&do_cell_matching=false&collection_name=fashion'
+      console.log(`${process.env.NEXT_PUBLIC_API_URL_UPLOAD}/process_website?start_url=${url}&do_ocr=false&do_table_structure=false&do_cell_matching=false&collection_name=${chatbotName}`)
       try {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL_UPLOAD}/process_website?start_url=${url}&do_ocr=false&do_table_structure=false&do_cell_matching=false&collection_name=${chatbotName}`)
         console.log(response)
