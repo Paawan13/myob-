@@ -22,8 +22,8 @@ const Auth = () => {
 
     try {
       const url = isLogin
-        ? 'https://classical-powerseller-ranch-aaa.trycloudflare.com/login/'
-        : 'https://guilty-drove-profit-colour.trycloudflare.com/signup/';
+        ? `${process.env.NEXT_PUBLIC__API_LOGIN}/login/`
+        : `${process.env.NEXT_PUBLIC__API_REGISTER}/signup/`;
 
       const payload = new URLSearchParams();
       payload.append('email', email);
