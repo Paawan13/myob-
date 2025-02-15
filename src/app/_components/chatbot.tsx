@@ -1,5 +1,6 @@
 import { get } from "http";
-import React, { useEffect, useState } from "react";
+import { Code, Copy, MessageSquare, Send } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Panel } from "react-resizable-panels";
 
@@ -17,6 +18,8 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
   handleSend,
 }) => {
   const [view, setView] = useState<"canvas" | "code">("canvas"); // 'canvas' or 'code'
+  const [isTyping, setIsTyping] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
   const [islogin, setLogin] = useState<any>(window ? window.localStorage.getItem("islogin") : null);
 
   const { Name: chatbotName, Color: chatbotColor } = useSelector((state: any) => state.chatBot)
@@ -225,107 +228,109 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
     }
   }, []);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages]) // Removed isTyping from dependencies
+
+
   return (
-    // <Panel defaultSize={50} minSize={20}>
-      <div className={`h-[100vh] flex flex-col bg-white p-6`}>
-        {/* Toggle Buttons */}
-        {islogin && (
-          <div className="flex justify-center space-x-4 mb-4">
-            <button
-              onClick={() => setView("canvas")}
-              className={`px-4 py-2 rounded-lg ${view === "canvas"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700"
-                }`}
-            >
-              Canvas
-            </button>
-            <button
-              onClick={() => setView("code")}
-              className={`px-4 py-2 rounded-lg ${view === "code"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700"
-                }`}
-            >
-              Code
-            </button>
+    <div className="h-screen flex flex-col bg-gray-50 p-6">
+      <div className="flex justify-center space-x-4 mb-6">
+        <button
+          onClick={() => setView("canvas")}
+          className={`px-6 py-2 rounded-full font-semibold transition-colors ${view === "canvas" ? "bg-indigo-600 text-white" : "bg-white text-indigo-600 hover:bg-indigo-50"
+            }`}
+        >
+          <MessageSquare className="inline-block mr-2 h-5 w-5" />
+          Canvas
+        </button>
+        <button
+          onClick={() => setView("code")}
+          className={`px-6 py-2 rounded-full font-semibold transition-colors ${view === "code" ? "bg-indigo-600 text-white" : "bg-white text-indigo-600 hover:bg-indigo-50"
+            }`}
+        >
+          <Code className="inline-block mr-2 h-5 w-5" />
+          Code
+        </button>
+      </div>
+
+      {view === "canvas" ? (
+        <div className="flex-1 flex flex-col max-w-3xl mx-auto w-full bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="p-6 bg-indigo-600 text-white">
+            <h2 className="text-2xl font-bold">{chatbotName}</h2>
           </div>
-        )}
 
-        {/* Conditional Rendering */}
-        {view === "canvas" ? (
-          <div className="w-5/6 mx-auto">
-            <div className="flex-1 overflow-y-auto h-[80vh] mb-4">
-              {/* Chatbot Header */}
-              <div
-                className="p-4 rounded-t-lg"
-                style={{ backgroundColor: chatbotColor ?? "red" }}
-              >
-                <h2 className="text-white text-xl font-bold">{chatbotName ?? "Enter Name..."}</h2>
+          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            {messages.map((msg, index) => (
+              <div key={index} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+                <div
+                  className={`rounded-2xl p-4 max-w-xs lg:max-w-md ${msg.sender === "user" ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-800"
+                    }`}
+                >
+                  {msg.text}
+                </div>
               </div>
-
-              {/* Chat Messages */}
-              <div className="mt-4 space-y-2">
-                {messages.map((msg, index) => (
-                  <div
-                    key={index}
-                    className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
-                      }`}
-                  >
+            ))}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-gray-100 text-gray-800 rounded-2xl p-4 max-w-xs lg:max-w-md">
+                  <div className="flex space-x-2">
+                    <div className="w-3 h-3 bg-gray-400 rounded-full animate-bounce"></div>
                     <div
-                      className={`rounded-lg p-3 max-w-xs ${msg.sender === "user"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 text-gray-700"
-                        }`}
-                    >
-                      {msg.text}
-                    </div>
+                      className="w-3 h-3 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
+                    <div
+                      className="w-3 h-3 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.4s" }}
+                    ></div>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
 
-            {/* Chat Input */}
-            <div className="flex">
+          <div className="p-4 border-t">
+            <div className="flex items-center bg-gray-100 rounded-full">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && handleSend()}
-                className="flex-1 p-2 border rounded-l-lg focus:outline-none"
+                className="flex-1 p-4 bg-transparent focus:outline-none"
                 placeholder="Type a message..."
               />
               <button
                 onClick={handleSend}
-                className="p-2 rounded-r-lg"
-                style={{ backgroundColor: chatbotColor ?? "red", color: "white" }}
+                className="p-4 text-white rounded-full"
+                style={{ backgroundColor: chatbotColor || "#6366F1" }}
               >
-                Send
+                <Send className="h-5 w-5" />
               </button>
             </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex-1 bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="flex justify-between items-center p-4 bg-indigo-600 text-white">
+            <h2 className="text-2xl font-bold">Code View</h2>
+            <button
+              onClick={handleCopy}
+              className="bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-50 transition-colors"
+            >
+              <Copy className="inline-block mr-2 h-5 w-5" />
+              Copy Code
+            </button>
+          </div>
+          <pre className="overflow-auto h-[calc(100vh-12rem)] p-6 text-sm">
+            <code>{codeSnippet}</code>
+          </pre>
+        </div>
+      )}
 
-            {/* Made By Comptech Enterprises */}
-            <div className="text-center mt-4 text-sm text-gray-500">
-              Made By Comptech Enterprises
-            </div>
-          </div>
-        ) : (
-          <div className="flex-1 overflow-y-auto mb-4">
-            <div className="flex justify-between items-center mb-2">
-              <button
-                onClick={handleCopy}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-              >
-                Copy Code
-              </button>
-            </div>
-            <pre className="overflow-auto text- h-[100vh] bg-gray-100 p-4 rounded-lg">
-              <code>{codeSnippet}</code>
-            </pre>
-          </div>
-        )}
-      </div>
-    // </Panel>
+      <div className="text-center mt-6 text-sm text-gray-500">Made By Comptech Enterprises</div>
+    </div>
   );
 };
 

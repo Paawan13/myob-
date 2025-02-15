@@ -43,25 +43,13 @@ const ChatbotCustomizer = () => {
   return (
     <div className='grid grid-cols-2 h-full'>
 
-      {/* <PanelGroup direction="horizontal" className="h-full overflow-auto"> */}
-        {/* Left Half: Customization Panel */}
-        {/* <Panel defaultSize={50} minSize={30}> */}
           <Auth />
-        {/* </Panel> */}
-
-        {/* Draggable Resize Handle */}
-        {/* <PanelResizeHandle className="w-2 bg-gray-200 hover:bg-gray-300 transition-colors" /> */}
-
-        {/* Right Half: Chatbot */}
-        {/* <Panel defaultSize={50} minSize={30}> */}
           <ChatbotPanel
             messages={messages}
             input={input}
             setInput={setInput}
             handleSend={handleSend}
           />
-        {/* </Panel> */}
-      {/* </PanelGroup> */}
     </div>
   );
 };
