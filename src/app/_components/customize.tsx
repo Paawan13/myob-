@@ -232,6 +232,12 @@ export default function ChatbotForm() {
           >
             Create Chatbot
           </button>
+          <button
+            onClick={() => window.location.reload()}
+            className="w-full py-3 px-6 text-white bg-blue-600 rounded-lg text-lg font-medium transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+          >
+            Create another chatboat
+          </button>
         </form>
       </div>
     </div>
