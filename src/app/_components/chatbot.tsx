@@ -7,6 +7,7 @@ import { Panel } from "react-resizable-panels";
 interface ChatbotPanelProps {
   messages: { sender: string; text: string }[];
   input: string;
+  istyping: boolean;
   setInput: (input: string) => void;
   handleSend: () => void;
 }
@@ -14,11 +15,11 @@ interface ChatbotPanelProps {
 const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
   messages,
   input,
+  istyping,
   setInput,
   handleSend,
 }) => {
   const [view, setView] = useState<"canvas" | "code">("canvas"); // 'canvas' or 'code'
-  const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [islogin, setLogin] = useState<any>(window ? window.localStorage.getItem("islogin") : null);
 
@@ -271,7 +272,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
                 </div>
               </div>
             ))}
-            {isTyping && (
+            {istyping && (
               <div className="flex justify-start">
                 <div className="bg-gray-100 text-gray-800 rounded-2xl p-4 max-w-xs lg:max-w-md">
                   <div className="flex space-x-2">

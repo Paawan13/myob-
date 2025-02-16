@@ -1,10 +1,12 @@
 "use client"
 
+import { uploadPdf, uploadPpt, uploadUrl } from "@/services/upload.service"
 import { setColor, setName } from "@/store/slices/state"
+import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-
+import { message } from "antd"
 export default function ChatbotForm() {
   const [inputType, setInputType] = useState("website")
   const Dispatch = useDispatch()
@@ -12,6 +14,7 @@ export default function ChatbotForm() {
   const [documentFile, setDocumentFile] = useState<File | null>(null);
   const [pptFile, setPptFile] = useState<File | null>(null);
   const [websiteUrl, setWebsiteUrl] = useState<string>("");
+  const [messageapi, contextHolder] = message.useMessage();
   const colors = [
     "#4B7BF5", // Blue
     "#F56565", // Red
@@ -21,47 +24,64 @@ export default function ChatbotForm() {
     "#ED64A6", // Pink
   ]
   let formData = new FormData();
+
+  const { mutate: useUpload, isPending } = useMutation({ mutationFn: uploadUrl })
+  const { mutate: usePPT, isPending: isloading } = useMutation({ mutationFn: uploadPpt })
+  const { mutate: usepdf, isPending: isloadingpdf } = useMutation({ mutationFn: uploadPdf })
+
+  useEffect(() => {
+    if (isPending) {
+      messageapi.loading('Uploading...')
+    }
+  }, [isPending])
+  useEffect(() => {
+    if (isloading) {
+      messageapi.loading('Uploading...')
+    }
+  }, [isloading])
+  useEffect(() => {
+    if (isloadingpdf) {
+      messageapi.loading('Uploading...')
+    }
+  }, [isloadingpdf])
+
   // Handle document upload
   const handleDocumentUpload = async (files: any) => {
     if (files) {
       const file = files.target.files[0];
-      console.log('File:', file);
-      formData.append('file', file);
-      try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_FILE_UPLOAD}/process?do_ocr=true&do_table_structure=true&do_cell_matching=true&collection_name=${chatbotName}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
+      usepdf({ file, chatbotName },
+        {
+          onSuccess: ({ status }) => {
+            if (status) {
+              console.log('chatbot made successfully');
+              messageapi.success('chatbot made successfully');
+            }
           },
-        });
-        console.log(response)
-        if (response.status === 200) {
-          console.log('File uploaded successfully:', response);
-        } else {
-          console.error('Error uploading file:', response);
+          onError: (error) => {
+            messageapi.error('Error uploading file');
+            console.log(error)
+          }
         }
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
-    }
-  };
+      )
+    };
+  }
   // handle URL upload
   const handleURLUpload = async (e: any) => {
     if (e.target.value) {
       let url = encodeURIComponent(e.target.value);
-      // console.log('URL:', e.target.value);
-      // 'https://crimes-exception-casual-extraordinary.trycloudflare.com/process_website?start_url=https%3A%2F%2Fay2i.com%2F&do_ocr=false&do_table_structure=false&do_cell_matching=false&collection_name=fashion'
-      console.log(`${process.env.NEXT_PUBLIC_API_URL_UPLOAD}/process_website?start_url=${url}&do_ocr=false&do_table_structure=false&do_cell_matching=false&collection_name=${chatbotName}`)
-      try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL_UPLOAD}/process_website?start_url=${url}&do_ocr=false&do_table_structure=false&do_cell_matching=false&collection_name=${chatbotName}`)
-        console.log(response)
-        if (response.status === 200) {
-          console.log('File uploaded successfully:', response);
-        } else {
-          console.error('Error uploading file:', response);
+      useUpload({ url, chatbotName },
+        {
+          onSuccess: ({ status }) => {
+            if (status) {
+              console.log('chatbot made successfully');
+              messageapi.success('chatbot made successfully');
+            }
+          },
+          onError: (error) => {
+            console.log(error)
+          }
         }
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
+      )
     }
   };
 
@@ -70,26 +90,22 @@ export default function ChatbotForm() {
     if (files) {
       const file = files.target.files[0];
       if (file) {
-        formData.append('file', file);
-      }
-      // 'https://adolescent-minor-congo-somerset.trycloudflare.com/process-ppt?collection_name=trial&languages=en'
-      try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_PPT_UPLOAD}/process-ppt?&languages=en&collection_name=${chatbotName}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
+        usePPT({ file, chatbotName }, {
+          onSuccess: ({ status }) => {
+            if (status) {
+              console.log('chatbot made successfully');
+              messageapi.success('chatbot made successfully');
+            }
           },
-        });
-        console.log(response)
-        if (response.status === 200) {
-          console.log('File uploaded successfully:', response);
-        } else {
-          console.error('Error uploading file:', response);
-        }
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
+          onError: (error) => {
+            messageapi.error('Error uploading file');
+            console.log(error)
+          }
+        })
+      };
     }
-  };
+
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -119,6 +135,7 @@ export default function ChatbotForm() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4 flex items-center justify-center">
+      {contextHolder}
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8">
         <h1 className="text-4xl mb-10 font-bold text-center bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
           Chatbot in 5 Minutes
@@ -171,10 +188,10 @@ export default function ChatbotForm() {
                 required
                 type="file"
                 onChange={(e: any) => setDocumentFile(e.target.files[0])}
-                accept=".pdf,.doc,.docx"
+                accept=".pdf"
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
               />
-              <p className="text-sm text-gray-500 mt-1">Accepted formats: PDF, DOC, DOCX</p>
+              <p className="text-sm text-gray-500 mt-1">Accepted formats: PDF</p>
             </div>
           )}
 

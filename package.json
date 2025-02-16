@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.1",
+    "@tanstack/react-query": "^5.66.0",
+    "antd": "^5.24.0",
     "axios": "^1.7.9",
     "lucide-react": "^0.475.0",
     "next": "15.1.5",
