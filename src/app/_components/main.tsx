@@ -17,6 +17,7 @@ const ChatbotCustomizer = () => {
   const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false)
+  const [islogin, setlogin] = useState(false)
   const { Name: chatbotName, Color: chatbotColor } = useSelector((state: any) => state.chatBot)
   const [messageapi, contextHolder] = message.useMessage();
   const { mutate: useChat, isPending } = useMutation({ mutationFn: chatService });
@@ -28,7 +29,7 @@ const ChatbotCustomizer = () => {
       setInput(''); // Clear the input field
       useChat({ input, chatbotName }, {
         onSuccess: (response) => {
-          setMessages([...messages, { text: response, sender: 'chatbot' }]);
+          setMessages((prev) => [...prev, { text: response, sender: 'chatbot' }]);
         },
         onError: (error) => {
           messageapi.error('An error occurred while sending the message');
@@ -48,17 +49,29 @@ const ChatbotCustomizer = () => {
     }
   }, [isPending])
 
+  useEffect(() => {
+    if (window) {
+      const islogin = window.localStorage.getItem('islogin');
+      if (islogin) {
+        setlogin(true)
+      }
+    }
+  }, [])
+
   return (
-    <div className='grid grid-cols-2 h-full'>
+    <div className={`grid ${islogin && "grid-cols-2"} h-full`}>
       {contextHolder}
       <Auth />
-      <ChatbotPanel
-        istyping={isTyping}
-        messages={messages}
-        input={input}
-        setInput={setInput}
-        handleSend={handleSend}
-      />
+      {
+        islogin &&
+        <ChatbotPanel
+          istyping={isTyping}
+          messages={messages}
+          input={input}
+          setInput={setInput}
+          handleSend={handleSend}
+        />
+      }
     </div>
   );
 };

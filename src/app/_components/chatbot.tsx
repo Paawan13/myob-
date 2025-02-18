@@ -3,7 +3,7 @@ import { Code, Copy, MessageSquare, Send } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Panel } from "react-resizable-panels";
-
+import { message } from "antd";
 interface ChatbotPanelProps {
   messages: { sender: string; text: string }[];
   input: string;
@@ -22,7 +22,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
   const [view, setView] = useState<"canvas" | "code">("canvas"); // 'canvas' or 'code'
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [islogin, setLogin] = useState<any>(window ? window.localStorage.getItem("islogin") : null);
-
+  const [messageapi, contextHolder] = message.useMessage();
   const { Name: chatbotName, Color: chatbotColor } = useSelector((state: any) => state.chatBot)
 
   const codeSnippet = `<div id="chat-container">
@@ -39,6 +39,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
       <div>
         <input type="text" placeholder="Type a message..." id="chat-input" />
         <button id="send-message">Send</button>
+        <p style="text-align: center;">Made by comptech Enterprises</p>
       </div>
     </div>
   </div>
@@ -218,8 +219,8 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
   const handleCopy = () => {
     navigator.clipboard
       .writeText(codeSnippet)
-      .then(() => alert("Code copied to clipboard!"))
-      .catch((err) => alert("Failed to copy code: " + err));
+      .then(() => messageapi.success("Code copied to clipboard"))
+      .catch((err) => messageapi.error("Failed to copy code"));
   };
 
   useEffect(() => {
@@ -230,12 +231,14 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
   }, []);
 
   useEffect(() => {
+    console.log(messages)
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages]) // Removed isTyping from dependencies
 
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 p-6">
+      {contextHolder}
       <div className="flex justify-center space-x-4 mb-6">
         <button
           onClick={() => setView("canvas")}

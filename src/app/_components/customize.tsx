@@ -3,7 +3,6 @@
 import { uploadPdf, uploadPpt, uploadUrl } from "@/services/upload.service"
 import { setColor, setName } from "@/store/slices/state"
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { message } from "antd"
@@ -23,7 +22,6 @@ export default function ChatbotForm() {
     "#9F7AEA", // Purple
     "#ED64A6", // Pink
   ]
-  let formData = new FormData();
 
   const { mutate: useUpload, isPending } = useMutation({ mutationFn: uploadUrl })
   const { mutate: usePPT, isPending: isloading } = useMutation({ mutationFn: uploadPpt })
