@@ -200,10 +200,28 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
         });
         let message = messageInput.value;
         messageInput.value = "";
+
+         const typing = document.createElement("div");
+        typing.classList.add("bot");
+        const botMessage = document.createElement("div");
+        botMessage.classList.add("message", "bot-message");
+        botMessage.textContent = "Typing...";
+        messages.appendChild(typing);
+        typing.appendChild(botMessage);
+
+        messages.scrollTo({
+          top: messages.scrollHeight,
+          behavior: "smooth",
+        });
+
+
         fetch(\`${process.env.NEXT_PUBLIC__API_QNA}/query?query=\${encodeURIComponent(message)}&collection_name=${chatbotName}\`, {
           method: "POST"})
           .then((response) => response.json())
           .then((response) => {
+
+               messages.removeChild(typing);
+
             const botMessage = document.createElement("div");
             botMessage.classList.add("message", "bot-message");
             botMessage.textContent = response.response;

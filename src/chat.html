@@ -171,11 +171,32 @@
         });
         let message = messageInput.value;
         messageInput.value = "";
-        fetch(`https://9a95981987ba69.lhr.life/query?query=${encodeURIComponent(message)}&collection_name=deepak`, {
+
+
+        // Add typing message
+        const typing = document.createElement("div");
+        typing.classList.add("bot");
+        const botMessage = document.createElement("div");
+        botMessage.classList.add("message", "bot-message");
+        botMessage.textContent = "Typing...";
+        messages.appendChild(typing);
+        typing.appendChild(botMessage);
+
+        messages.scrollTo({
+          top: messages.scrollHeight,
+          behavior: "smooth",
+        });
+
+
+
+        fetch(`https://kuwait-sharing-metadata-codes.trycloudflare.com/query?query=${encodeURIComponent(message)}&collection_name=ComptechAI`, {
           method: "POST"
         })
           .then((response) => response.json())
           .then((response) => {
+
+
+             messages.removeChild(typing);
             const botMessage = document.createElement("div");
             botMessage.classList.add("message", "bot-message");
             botMessage.textContent = response.response;
