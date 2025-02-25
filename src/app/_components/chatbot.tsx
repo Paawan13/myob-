@@ -34,12 +34,16 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
     </div>
     <div id="chat-content">
       <div id="messages">
-        <div class="message bot-message">Hello I am a bot from ${chatbotName}</div>
+        <div class="message bot-message">Hello I am an AI Assitant named ${chatbotName} , How can I help you</div>
       </div>
       <div>
         <input type="text" placeholder="Type a message..." id="chat-input" />
         <button id="send-message">Send</button>
-        <p style="text-align: center;">Made by comptech Enterprises</p>
+        <a href="www.comptech.in">
+        <p style="text-align: center;">
+        Made by Comptech Enterprises
+        </p>
+        </a>
       </div>
     </div>
   </div>
