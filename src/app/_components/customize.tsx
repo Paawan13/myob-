@@ -26,7 +26,10 @@ export default function ChatbotForm() {
   const { mutate: useUpload, isPending } = useMutation({ mutationFn: uploadUrl })
   const { mutate: usePPT, isPending: isloading } = useMutation({ mutationFn: uploadPpt })
   const { mutate: usepdf, isPending: isloadingpdf } = useMutation({ mutationFn: uploadPdf })
-
+  const validateName = (name: string) => {
+    const regex = /^[A-Za-z][A-Za-z0-9!@#$%^&*()_+=-]*$/;
+    return regex.test(name);
+  }
   useEffect(() => {
     if (isPending) {
       messageapi.loading('Uploading...')
@@ -107,6 +110,11 @@ export default function ChatbotForm() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    validateName(chatbotName)
+    if (!validateName(chatbotName)) {
+      messageapi.error('Invalid chatbot name');
+      return;
+    }
     switch (inputType) {
       case "website":
         handleURLUpload({ target: { value: websiteUrl } } as React.ChangeEvent<HTMLInputElement>);
@@ -148,6 +156,7 @@ export default function ChatbotForm() {
               placeholder="Enter chatbot name"
               className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none"
             />
+            <span className="text-gray-400 text-sm pl-1 pt-1">Should start with Letter, can include number and Signs but No Spaces</span>
           </div>
 
           <div className="space-y-2">

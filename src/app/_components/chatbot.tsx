@@ -39,7 +39,7 @@ const ChatbotPanel: React.FC<ChatbotPanelProps> = ({
       <div>
         <input type="text" placeholder="Type a message..." id="chat-input" />
         <button id="send-message">Send</button>
-        <a href="www.comptech.in">
+        <a href="https://www.comptech.in/">
         <p style="text-align: center;">
         Made by Comptech Enterprises
         </p>
